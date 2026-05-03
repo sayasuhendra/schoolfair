@@ -2,11 +2,31 @@
 gsap.registerPlugin(ScrollTrigger);
 
 // Initial Animations
-window.addEventListener('DOMContentLoaded', () => {
-    initNavbar();
-    initMobileMenu();
-    initHeroAnimations();
-    initScrollAnimations();
+window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    const loaderProgress = document.querySelector('.loader-progress');
+    
+    // Simulate progress
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 30;
+        if (progress > 100) progress = 100;
+        loaderProgress.style.width = `${progress}%`;
+        
+        if (progress === 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+                
+                // Initialize animations after preloader is gone
+                initNavbar();
+                initMobileMenu();
+                initHeroAnimations();
+                initScrollAnimations();
+            }, 500);
+        }
+    }, 200);
 });
 
 function initNavbar() {
