@@ -1,66 +1,60 @@
-// Register ScrollTrigger
-gsap.registerPlugin(ScrollTrigger);
-
-// Safety fallback: if something goes wrong, show all content after 4s
-const safetyTimeout = setTimeout(() => {
-    document.querySelectorAll('.reveal, .reveal-hero').forEach(el => {
-        el.style.opacity = '1';
-        el.style.transform = 'none';
-    });
+// Ensure preloader is always hidden, even if everything else fails
+function hidePreloader() {
     const preloader = document.getElementById('preloader');
     if (preloader) {
         preloader.style.opacity = '0';
         preloader.style.visibility = 'hidden';
     }
-}, 4000);
+}
+
+// Safety net: force-show content and hide preloader after 5s no matter what
+const safetyTimeout = setTimeout(() => {
+    hidePreloader();
+}, 5000);
 
 window.addEventListener('load', () => {
-    const preloader = document.getElementById('preloader');
     const loaderProgress = document.querySelector('.loader-progress');
 
-    // Animate progress bar smoothly to 100
+    // Animate progress bar to 100%
     let progress = 0;
     const interval = setInterval(() => {
-        progress += Math.random() * 25 + 5; // always advances, never stalls
+        progress += Math.random() * 25 + 10;
         if (progress >= 100) {
             progress = 100;
-            loaderProgress.style.width = '100%';
+            if (loaderProgress) loaderProgress.style.width = '100%';
             clearInterval(interval);
-            setTimeout(() => {
-                preloader.style.opacity = '0';
-                preloader.style.visibility = 'hidden';
-                clearTimeout(safetyTimeout); // cancel fallback if we got here normally
 
-                // Initialize animations
+            setTimeout(() => {
+                clearTimeout(safetyTimeout);
+                hidePreloader();
+
+                // Boot animations only if GSAP loaded
                 try {
+                    if (typeof gsap === 'undefined') throw new Error('GSAP not loaded');
+                    gsap.registerPlugin(ScrollTrigger);
                     initNavbar();
                     initMobileMenu();
                     initHeroAnimations();
                     initScrollAnimations();
-                    ScrollTrigger.refresh(); // ensure correct positions after layout
+                    ScrollTrigger.refresh();
                 } catch (e) {
-                    console.warn('GSAP init error:', e);
-                    // Show all hidden content as fallback
-                    document.querySelectorAll('.reveal, .reveal-hero').forEach(el => {
-                        el.style.opacity = '1';
-                        el.style.transform = 'none';
-                    });
+                    console.warn('Animation init skipped:', e.message);
+                    // Non-GSAP interactivity still works
+                    initNavbar();
+                    initMobileMenu();
                 }
             }, 400);
         } else {
-            loaderProgress.style.width = `${progress}%`;
+            if (loaderProgress) loaderProgress.style.width = `${progress}%`;
         }
     }, 150);
 });
 
 function initNavbar() {
     const navbar = document.querySelector('.navbar');
+    if (!navbar) return;
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
     });
 }
 
@@ -68,6 +62,7 @@ function initMobileMenu() {
     const btn = document.querySelector('.mobile-menu-btn');
     const menu = document.querySelector('.mobile-menu');
     const links = document.querySelectorAll('.mobile-nav-links a');
+    if (!btn || !menu) return;
 
     btn.addEventListener('click', () => {
         menu.classList.toggle('active');
@@ -81,7 +76,6 @@ function initMobileMenu() {
         });
     });
 }
-
 
 function initHeroAnimations() {
     const tl = gsap.timeline({ defaults: { ease: 'power4.out', duration: 1 } });
