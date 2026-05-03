@@ -1,5 +1,8 @@
+console.log('main.js loaded');
+
 // Ensure preloader is always hidden, even if everything else fails
 function hidePreloader() {
+    console.log('Hiding preloader');
     const preloader = document.getElementById('preloader');
     if (preloader) {
         preloader.style.opacity = '0';
@@ -9,10 +12,12 @@ function hidePreloader() {
 
 // Safety net: force-show content and hide preloader after 5s no matter what
 const safetyTimeout = setTimeout(() => {
+    console.warn('Safety timeout reached - force hiding preloader');
     hidePreloader();
 }, 5000);
 
 window.addEventListener('load', () => {
+    console.log('Window load event fired');
     const loaderProgress = document.querySelector('.loader-progress');
 
     // Animate progress bar to 100%
@@ -25,20 +30,32 @@ window.addEventListener('load', () => {
             clearInterval(interval);
 
             setTimeout(() => {
+                console.log('Progress finished, booting animations');
                 clearTimeout(safetyTimeout);
                 hidePreloader();
 
                 // Boot animations only if GSAP loaded
                 try {
-                    if (typeof gsap === 'undefined') throw new Error('GSAP not loaded');
+                    if (typeof gsap === 'undefined') {
+                        throw new Error('GSAP not loaded');
+                    }
+                    if (typeof ScrollTrigger === 'undefined') {
+                        throw new Error('ScrollTrigger not loaded');
+                    }
+                    
+                    console.log('Registering ScrollTrigger');
                     gsap.registerPlugin(ScrollTrigger);
+                    
+                    console.log('Initializing modules');
                     initNavbar();
                     initMobileMenu();
                     initHeroAnimations();
                     initScrollAnimations();
+                    
+                    console.log('Refreshing ScrollTrigger');
                     ScrollTrigger.refresh();
                 } catch (e) {
-                    console.warn('Animation init skipped:', e.message);
+                    console.error('Animation init failed:', e.message);
                     // Non-GSAP interactivity still works
                     initNavbar();
                     initMobileMenu();
@@ -121,53 +138,11 @@ function initScrollAnimations() {
                 scrollTrigger: {
                     trigger: elem,
                     start: 'top 85%',
-                    end: 'bottom 20%',
                     toggleActions: 'play none none none'
                 }
             }
         );
     });
-
-    // Reveal left
-    gsap.utils.toArray('.reveal-left').forEach((elem) => {
-        gsap.fromTo(elem, 
-            { 
-                x: -50, 
-                opacity: 0 
-            }, 
-            {
-                x: 0,
-                opacity: 1,
-                duration: 1,
-                scrollTrigger: {
-                    trigger: elem,
-                    start: 'top 85%',
-                    toggleActions: 'play none none none'
-                }
-            }
-        );
-    });
-
-    // Reveal right
-    gsap.utils.toArray('.reveal-right').forEach((elem) => {
-        gsap.fromTo(elem, 
-            { 
-                x: 50, 
-                opacity: 0 
-            }, 
-            {
-                x: 0,
-                opacity: 1,
-                duration: 1,
-                scrollTrigger: {
-                    trigger: elem,
-                    start: 'top 85%',
-                    toggleActions: 'play none none none'
-                }
-            }
-        );
-    });
-
 
     // Card Hover Parallax (Subtle)
     const cards = gsap.utils.toArray('.card, .pilar-item, .program-card');
