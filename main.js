@@ -1,32 +1,56 @@
 // Register ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
 
-// Initial Animations
+// Safety fallback: if something goes wrong, show all content after 4s
+const safetyTimeout = setTimeout(() => {
+    document.querySelectorAll('.reveal, .reveal-hero').forEach(el => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+    });
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        preloader.style.opacity = '0';
+        preloader.style.visibility = 'hidden';
+    }
+}, 4000);
+
 window.addEventListener('load', () => {
     const preloader = document.getElementById('preloader');
     const loaderProgress = document.querySelector('.loader-progress');
-    
-    // Simulate progress
+
+    // Animate progress bar smoothly to 100
     let progress = 0;
     const interval = setInterval(() => {
-        progress += Math.random() * 30;
-        if (progress > 100) progress = 100;
-        loaderProgress.style.width = `${progress}%`;
-        
-        if (progress === 100) {
+        progress += Math.random() * 25 + 5; // always advances, never stalls
+        if (progress >= 100) {
+            progress = 100;
+            loaderProgress.style.width = '100%';
             clearInterval(interval);
             setTimeout(() => {
                 preloader.style.opacity = '0';
                 preloader.style.visibility = 'hidden';
-                
-                // Initialize animations after preloader is gone
-                initNavbar();
-                initMobileMenu();
-                initHeroAnimations();
-                initScrollAnimations();
-            }, 500);
+                clearTimeout(safetyTimeout); // cancel fallback if we got here normally
+
+                // Initialize animations
+                try {
+                    initNavbar();
+                    initMobileMenu();
+                    initHeroAnimations();
+                    initScrollAnimations();
+                    ScrollTrigger.refresh(); // ensure correct positions after layout
+                } catch (e) {
+                    console.warn('GSAP init error:', e);
+                    // Show all hidden content as fallback
+                    document.querySelectorAll('.reveal, .reveal-hero').forEach(el => {
+                        el.style.opacity = '1';
+                        el.style.transform = 'none';
+                    });
+                }
+            }, 400);
+        } else {
+            loaderProgress.style.width = `${progress}%`;
         }
-    }, 200);
+    }, 150);
 });
 
 function initNavbar() {

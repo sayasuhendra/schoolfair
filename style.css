@@ -588,7 +588,5 @@ h1, h2, h3, h4 {
     }
 }
 
-/* Animation Classes */
-.reveal, .reveal-hero {
-    opacity: 0;
-}
+/* Animation initial states are managed by GSAP, not CSS */
+/* This prevents content from being invisible if GSAP fails to load */
