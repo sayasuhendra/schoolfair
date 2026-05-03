@@ -431,14 +431,14 @@ h1, h2, h3, h4 {
     overflow: hidden;
 }
 
-/* Banana Decorations */
-.banana-decor {
+/* Logo Decorations */
+.logo-decor {
     position: absolute;
     pointer-events: none;
     z-index: 0;
 }
 
-.banana-decor--left {
+.logo-decor--left {
     left: -60px;
     top: 50%;
     transform: translateY(-50%) rotate(15deg);
@@ -446,7 +446,7 @@ h1, h2, h3, h4 {
     opacity: 0;
 }
 
-.banana-decor img {
+.logo-decor img {
     width: 100%;
     height: auto;
     filter: drop-shadow(0 10px 30px rgba(0,0,0,0.08));
@@ -514,7 +514,7 @@ h1, h2, h3, h4 {
     pointer-events: none;
 }
 
-.cta-banana {
+.cta-logo {
     position: absolute;
     bottom: -20px;
     right: -20px;

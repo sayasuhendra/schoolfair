@@ -198,10 +198,10 @@ function initScrollAnimations() {
         }
     });
 
-    // Banana decor scroll-in animation
-    const bananaDec = document.querySelector('.banana-decor--left');
-    if (bananaDec) {
-        gsap.to(bananaDec, {
+    // Logo decor scroll-in animation
+    const logoDec = document.querySelector('.logo-decor--left');
+    if (logoDec) {
+        gsap.to(logoDec, {
             opacity: 0.55,
             x: 30,
             duration: 1.4,
@@ -214,7 +214,7 @@ function initScrollAnimations() {
         });
 
         // Gentle float animation
-        gsap.to(bananaDec, {
+        gsap.to(logoDec, {
             y: "+=18",
             rotation: "+=6",
             duration: 3,
@@ -238,15 +238,20 @@ function initScrollAnimations() {
         }
     });
 
-    // CTA banana wiggle on hover
-    const ctaBanana = document.querySelector('.cta-banana');
+    // CTA logo wiggle on hover
+    const ctaLogo = document.querySelector('.cta-logo');
     const ctaBox = document.querySelector('.cta-box');
-    if (ctaBanana && ctaBox) {
+    if (ctaLogo && ctaBox) {
         ctaBox.addEventListener('mouseenter', () => {
-            gsap.to(ctaBanana, { rotation: -10, scale: 1.1, duration: 0.4, ease: "back.out(2)" });
+            gsap.to(ctaLogo, { rotation: -10, scale: 1.1, duration: 0.4, ease: "back.out(2)" });
         });
         ctaBox.addEventListener('mouseleave', () => {
-            gsap.to(ctaBanana, { rotation: -20, scale: 1, duration: 0.4, ease: "power2.out" });
+            gsap.to(ctaLogo, { rotation: -20, scale: 1, duration: 0.4, ease: "power2.out" });
         });
     }
+
+    // Extra refresh after layout stabilization
+    setTimeout(() => {
+        ScrollTrigger.refresh();
+    }, 1000);
 }
