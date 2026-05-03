@@ -83,7 +83,6 @@ html {
 
 body {
     background-color: var(--bg-color);
-    background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
     color: var(--text-color);
     font-family: var(--font-sans);
     line-height: 1.6;
@@ -429,7 +428,28 @@ h1, h2, h3, h4 {
 
 .latar-belakang {
     position: relative;
-    background-image: url("https://www.transparenttextures.com/patterns/leaf.png");
+    overflow: hidden;
+}
+
+/* Banana Decorations */
+.banana-decor {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.banana-decor--left {
+    left: -60px;
+    top: 50%;
+    transform: translateY(-50%) rotate(15deg);
+    width: 280px;
+    opacity: 0;
+}
+
+.banana-decor img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.08));
 }
 
 .pilar-number {
@@ -474,13 +494,35 @@ h1, h2, h3, h4 {
 
 /* Sponsor Section */
 .cta-box {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: linear-gradient(135deg, #2d5016 0%, #606c38 40%, #8b6914 100%);
     color: var(--white);
-    padding: 80px 40px;
+    padding: 80px 60px;
     border-radius: 40px;
     text-align: center;
     max-width: 900px;
     margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at top right, rgba(233, 196, 106, 0.25) 0%, transparent 60%);
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.cta-banana {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 240px;
+    opacity: 0.35;
+    transform: rotate(-20deg);
+    pointer-events: none;
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.2));
 }
 
 .cta-box h3 {

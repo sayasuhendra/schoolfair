@@ -204,4 +204,56 @@ function initScrollAnimations() {
             toggleActions: "play none none none"
         }
     });
+
+    // Banana decor scroll-in animation
+    const bananaDec = document.querySelector('.banana-decor--left');
+    if (bananaDec) {
+        gsap.to(bananaDec, {
+            opacity: 0.55,
+            x: 30,
+            duration: 1.4,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: ".latar-belakang",
+                start: "top 75%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        // Gentle float animation
+        gsap.to(bananaDec, {
+            y: "+=18",
+            rotation: "+=6",
+            duration: 3,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+        });
+    }
+
+    // CTA box slide-up with scale
+    gsap.from(".cta-box", {
+        opacity: 0,
+        y: 60,
+        scale: 0.96,
+        duration: 1.2,
+        ease: "power3.out",
+        scrollTrigger: {
+            trigger: ".sponsor",
+            start: "top 80%",
+            toggleActions: "play none none none"
+        }
+    });
+
+    // CTA banana wiggle on hover
+    const ctaBanana = document.querySelector('.cta-banana');
+    const ctaBox = document.querySelector('.cta-box');
+    if (ctaBanana && ctaBox) {
+        ctaBox.addEventListener('mouseenter', () => {
+            gsap.to(ctaBanana, { rotation: -10, scale: 1.1, duration: 0.4, ease: "back.out(2)" });
+        });
+        ctaBox.addEventListener('mouseleave', () => {
+            gsap.to(ctaBanana, { rotation: -20, scale: 1, duration: 0.4, ease: "power2.out" });
+        });
+    }
 }
